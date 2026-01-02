@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="100" y2="100">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <!-- Subtle outer ring -->
+  <circle cx="50" cy="50" r="42" stroke="url(#g)" stroke-width="6" stroke-opacity="0.3"/>
+  <!-- Fluid Wave stroke -->
+  <path d="M20 50 Q 40 30, 50 50 T 80 50" stroke="url(#g)" stroke-width="10" stroke-linecap="round" fill="none"/>
+</svg>
