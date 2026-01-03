@@ -97,8 +97,8 @@ export class BluetoothService {
         // Bit 0: Stroke Rate and Stroke Count (present when bit is 0)
         if ((flags & (1 << 0)) === 0) {
             let rawRate = value.getUint8(byteIndex);
-            if (rawRate === 255) rawRate = 0;
-            data.strokeRate = rawRate;
+            if (rawRate === 0xFF) rawRate = 0;
+            data.strokeRate = rawRate / 2;  // Convert back from 0.5 SPM resolution
             byteIndex += 1;
             data.strokeCount = value.getUint16(byteIndex, true);
             byteIndex += 2;
@@ -122,6 +122,7 @@ export class BluetoothService {
         // Bit 3: Instantaneous Pace
         if ((flags & (1 << 3)) !== 0) {
             data.instantaneousPace = value.getUint16(byteIndex, true);
+            if (data.instantaneousPace === 0xFFFF) data.instantaneousPace = undefined;
             byteIndex += 2;
         }
 

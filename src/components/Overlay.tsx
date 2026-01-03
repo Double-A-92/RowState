@@ -53,7 +53,7 @@ export const Overlay: React.FC<OverlayProps> = ({
     };
 
     const formatPace = (pace500m?: number) => {
-        if (!pace500m || pace500m === Infinity || isNaN(pace500m)) return '--';
+        if (!pace500m || pace500m === Infinity || pace500m === undefined || isNaN(pace500m)) return '--';
         return formatTime(pace500m);
     };
 
@@ -72,17 +72,17 @@ export const Overlay: React.FC<OverlayProps> = ({
                     {(connectionStatus === 'disconnected' || connectionStatus === 'error') && (
                         <button
                             onClick={onConnect}
-                            className="group h-12 flex items-center gap-3 px-6 bg-neutral-900/90 hover:bg-neutral-800 text-white rounded-full border border-white/20 transition-all shadow-xl hover:shadow-blue-500/20 active:scale-95 touch-manipulation"
+                            className="group h-12 flex items-center gap-3 px-5 bg-neutral-900/90 hover:bg-neutral-800 text-white rounded-full border border-white/20 transition-all shadow-xl hover:shadow-blue-500/20 active:scale-95 touch-manipulation"
                         >
                             <svg className="w-5 h-5 text-blue-400 group-hover:text-blue-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 7l10 10-5 5V2l5 5L7 17" />
                             </svg>
-                            <span className="font-bold text-sm tracking-wide uppercase">Connect Rower</span>
+                            <span className="font-bold text-sm tracking-wide uppercase">Rower</span>
                         </button>
                     )}
 
                     {connectionStatus === 'connecting' && (
-                        <div className="h-12 flex items-center gap-3 px-6 bg-neutral-900/90 text-yellow-200 rounded-full border border-yellow-500/30 shadow-xl">
+                        <div className="h-12 flex items-center gap-3 px-5 bg-neutral-900/90 text-yellow-200 rounded-full border border-yellow-500/30 shadow-xl">
                             <div className="w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
                             <span className="font-bold text-sm tracking-wide uppercase">Connecting...</span>
                         </div>
@@ -113,19 +113,19 @@ export const Overlay: React.FC<OverlayProps> = ({
                     {(hrConnectionStatus === 'disconnected' || hrConnectionStatus === 'error') && (
                         <button
                             onClick={onHrConnect}
-                            className="group h-12 flex items-center gap-3 px-6 bg-neutral-900/90 hover:bg-neutral-800 text-white rounded-full border border-white/20 transition-all shadow-xl hover:shadow-red-500/20 active:scale-95 touch-manipulation"
+                            className="group h-12 flex items-center gap-3 px-5 bg-neutral-900/90 hover:bg-neutral-800 text-white rounded-full border border-white/20 transition-all shadow-xl hover:shadow-red-500/20 active:scale-95 touch-manipulation"
                         >
                             <svg className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
-                            <span className="font-bold text-sm tracking-wide uppercase">Connect HR</span>
+                            <span className="font-bold text-sm tracking-wide uppercase">Heart Rate</span>
                         </button>
                     )}
 
                     {hrConnectionStatus === 'connecting' && (
-                        <div className="h-12 flex items-center gap-3 px-6 bg-neutral-900/90 text-yellow-200 rounded-full border border-yellow-500/30 shadow-xl">
+                        <div className="h-12 flex items-center gap-3 px-5 bg-neutral-900/90 text-yellow-200 rounded-full border border-yellow-500/30 shadow-xl">
                             <div className="w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                            <span className="font-bold text-sm tracking-wide uppercase">Connecting HR...</span>
+                            <span className="font-bold text-sm tracking-wide uppercase">Connecting...</span>
                         </div>
                     )}
 
@@ -136,12 +136,12 @@ export const Overlay: React.FC<OverlayProps> = ({
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                                 </span>
-                                <span className="font-bold text-sm tracking-wide uppercase">HR Monitor</span>
+                                <span className="font-bold text-sm tracking-wide uppercase">Heart Rate</span>
                             </div>
                             <button
                                 onClick={onHrDisconnect}
                                 className="px-5 h-full bg-neutral-900/95 hover:bg-neutral-800 text-red-400 hover:text-red-300 rounded-r-full border border-red-500/30 border-l border-l-white/10 transition-all font-semibold text-xs flex items-center touch-manipulation"
-                                title="Disconnect HR Monitor"
+                                title="Disconnect Heart Rate Monitor"
                             >
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -155,7 +155,7 @@ export const Overlay: React.FC<OverlayProps> = ({
                     <div className="flex gap-3">
                         <button
                             onClick={() => setShowInput(!showInput)}
-                            className="group h-12 flex items-center gap-3 bg-neutral-900/90 hover:bg-neutral-800 px-6 rounded-full border border-white/20 text-sm text-white font-bold transition-all shadow-xl hover:shadow-white/10 tracking-wide uppercase touch-manipulation"
+                            className="group h-12 flex items-center gap-3 bg-neutral-900/90 hover:bg-neutral-800 px-5 rounded-full border border-white/20 text-sm text-white font-bold transition-all shadow-xl hover:shadow-white/10 tracking-wide uppercase touch-manipulation"
                         >
                             <svg className="w-5 h-5 text-gray-300 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 {showInput ? (
@@ -165,7 +165,7 @@ export const Overlay: React.FC<OverlayProps> = ({
                                 )}
                                 {!showInput && <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />}
                             </svg>
-                            {showInput ? 'Close' : 'Video URL'}
+                            {showInput ? 'Close' : 'Video'}
                         </button>
 
                         <button
@@ -222,7 +222,7 @@ export const Overlay: React.FC<OverlayProps> = ({
                                 </div>
                             </div>
 
-                            <button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg text-xs font-bold transition uppercase w-full shadow-lg tracking-wider">
+                            <button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-3 rounded-lg text-xs font-bold transition uppercase w-full shadow-lg tracking-wider">
                                 Load Video
                             </button>
                         </form>
