@@ -50,7 +50,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
                 // since we set userActions.click = true
                 player.on('click', () => {
                     if (player.paused()) {
-                        player.play().catch((err: any) => {
+                        player.play()?.catch(() => {
                             // Autoplay may be blocked - that's okay
                             console.log('Playback requires user interaction on some devices');
                         });
