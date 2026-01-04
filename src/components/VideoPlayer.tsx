@@ -22,13 +22,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
             videoRef.current.appendChild(videoElement);
 
             const player = videojs(videoElement, {
-                controls: false,
+                controls: false, // No UI controls since we want tap to play/pause
                 userActions: {
-                    click: true
+                    click: true // Let Video.js handle clicks
                 },
                 autoplay: false,
                 preload: 'auto',
-                fluid: true,
+                fluid: true, // Responsive by default
+                playsinline: true, // Important for iOS
                 techOrder: ['youtube'],
                 sources: [{
                     type: 'video/youtube',
@@ -45,10 +46,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
             }, () => {
                 player.playbackRate(playbackRate);
 
-                // Explicit click handler for touch/interaction
+                // Tap/click to play/pause - using Video.js's built-in click handler
+                // since we set userActions.click = true
                 player.on('click', () => {
                     if (player.paused()) {
-                        player.play();
+                        player.play().catch((err: any) => {
+                            // Autoplay may be blocked - that's okay
+                            console.log('Playback requires user interaction on some devices');
+                        });
                     } else {
                         player.pause();
                     }
@@ -59,6 +64,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
                     console.error('VideoJS Error:', err);
                     if (onError) onError(err);
                 });
+
+                // Handle mobile touch events gracefully
+                player.on('touchstart', () => {
+                    // No need to prevent default - let browser handle naturally
+                });
             });
 
             playerRef.current = player;
@@ -67,6 +77,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
             const player = playerRef.current;
             if (player.currentSrc() !== src) {
                 player.src({ type: 'video/youtube', src });
+                player.load();
             }
         }
     }, [src]);
