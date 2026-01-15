@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRowingMetrics } from './hooks/useRowingMetrics';
 import { useHeartRate } from './hooks/useHeartRate';
 import { VideoPlayer } from './components/VideoPlayer';
@@ -11,6 +11,8 @@ function App() {
   // Default video
   const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=FljjSVANT9I');
   const [baselineSpm, setBaselineSpm] = useState(22);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const prevStrokeRateRef = useRef<number>(0);
 
   // Smart playback rate
   const playbackRate = useSmartPlaybackRate(metrics.strokeRate, baselineSpm, status === 'connected');
@@ -20,11 +22,25 @@ function App() {
     setVideoError(error?.message || 'Video playback failed. Try another URL.');
   };
 
+  useEffect(() => {
+    const currentStrokeRate = metrics.strokeRate || 0;
+
+    // Automatically start video playback when rowing begins (stroke rate > 0).
+    if (status === 'connected' && prevStrokeRateRef.current === 0 && currentStrokeRate > 0) {
+      setIsVideoPlaying(true);
+    }
+
+    prevStrokeRateRef.current = currentStrokeRate;
+  }, [metrics.strokeRate, status]);
+
   return (
     <div className="relative w-screen h-screen bg-black">
       <VideoPlayer
         src={videoUrl}
         playbackRate={playbackRate}
+        playing={isVideoPlaying}
+        onPlay={() => setIsVideoPlaying(true)}
+        onPause={() => setIsVideoPlaying(false)}
         onError={handleVideoError}
       />
       {videoError && (

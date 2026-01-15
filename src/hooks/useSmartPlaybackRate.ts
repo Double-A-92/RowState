@@ -22,19 +22,16 @@ export const useSmartPlaybackRate = (currentSpm: number | undefined, baselineSpm
             targetRateRef.current = 0;
         } else {
             // Apply deadband/tolerance
-            // Only update target if SPM change is significant (> 1) to prevent jitter
-            // OR if we are resuming from a stop
+            // Only update target if SPM change is significant or resuming from stop.
             const lastSpm = lastSpmRef.current;
             if (lastSpm === undefined || Math.abs(currentSpm - lastSpm) > 1 || lastSpm < 10) {
                 // Calculate raw target
-                // Logic: 1.0x speed at Baseline SPM.
-                // 0.05x change per 1 SPM difference.
-                // e.g. Baseline 20. Current 24. Diff +4. rate = 1.0 + 0.2 = 1.2x.
+                // Calculate target rate: 1.0x at baseline, +/- 0.05x per SPM difference.
                 let newTarget = 1.0 + (currentSpm - baselineSpm) * 0.05;
 
                 // Clamp target
-                // Min 0.25 (slowest useful playback), Max 2.5
-                newTarget = Math.max(0.25, Math.min(2.5, newTarget));
+                // Min 0 (stop), Max 2.5 (fastest useful playback)
+                newTarget = Math.max(0, Math.min(2.5, newTarget));
 
                 targetRateRef.current = newTarget;
                 lastSpmRef.current = currentSpm;
@@ -48,8 +45,7 @@ export const useSmartPlaybackRate = (currentSpm: number | undefined, baselineSpm
             const diff = targetRateRef.current - currentRateRef.current;
 
             // Deceleration constant (coasting) vs Acceleration
-            // We want 'coasting' to stop to be slow (simulating boat momentum)
-            // We want acceleration to be relatively responsive
+            // Apply differential easing for acceleration vs deceleration.
 
             let easing = 0.05; // Default responsiveness
 
@@ -58,7 +54,7 @@ export const useSmartPlaybackRate = (currentSpm: number | undefined, baselineSpm
             } else {
                 if (targetRateRef.current < currentRateRef.current) {
                     // Decelerating (coasting)
-                    easing = 0.005;
+                    easing = 0.01;
                 } else {
                     // Accelerating
                     easing = 0.1;
@@ -66,9 +62,7 @@ export const useSmartPlaybackRate = (currentSpm: number | undefined, baselineSpm
                 currentRateRef.current += diff * easing;
             }
 
-            // Update state to trigger re-render if value changed significantly
-            // (Optimization: only set state if change is visible to avoid react render spam, 
-            // but we need it for the video player prop)
+            // Update state.
             setRate(Number(currentRateRef.current.toFixed(2)));
 
             animationFrameRef.current = requestAnimationFrame(animate);

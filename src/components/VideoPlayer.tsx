@@ -6,10 +6,13 @@ import 'videojs-youtube';
 interface VideoPlayerProps {
     src: string;
     playbackRate: number;
+    playing: boolean;
+    onPlay?: () => void;
+    onPause?: () => void;
     onError?: (error: any) => void;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onError }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, playing, onPlay, onPause, onError }) => {
     const videoRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<any | null>(null);
 
@@ -22,13 +25,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
             videoRef.current.appendChild(videoElement);
 
             const player = videojs(videoElement, {
-                controls: false, // No UI controls since we want tap to play/pause
+                controls: false, // Disable default UI controls
                 userActions: {
-                    click: true // Let Video.js handle clicks
+                    click: true // Enable click interactions
                 },
                 autoplay: false,
                 preload: 'auto',
-                fluid: true, // Responsive by default
+                fluid: false, // Explicitly control dimensions via CSS
+                fill: true, // Fill the container
                 playsinline: true, // Important for iOS
                 techOrder: ['youtube'],
                 sources: [{
@@ -45,6 +49,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
                 }
             }, () => {
                 player.playbackRate(playbackRate);
+
+                player.on('play', () => {
+                    if (onPlay) onPlay();
+                });
+
+                player.on('pause', () => {
+                    if (onPause) onPause();
+                });
 
                 // Tap/click to play/pause - using Video.js's built-in click handler
                 // since we set userActions.click = true
@@ -85,9 +97,33 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
     useEffect(() => {
         const player = playerRef.current;
         if (player) {
-            player.playbackRate(playbackRate);
+            // Pause playback if rate is below 0.1, as YouTube API does not support playbackRate(0).
+            if (playbackRate < 0.1) {
+                if (!player.paused()) {
+                    player.pause();
+                }
+            } else {
+                // Resume playback if allowed by props.
+                if (playing && player.paused()) {
+                    player.play()?.catch(() => console.log('Playback blocked'));
+                }
+                player.playbackRate(playbackRate);
+            }
         }
-    }, [playbackRate]);
+    }, [playbackRate, playing]);
+
+    useEffect(() => {
+        const player = playerRef.current;
+        if (player) {
+            if (playing && player.paused()) {
+                player.play()?.catch(() => {
+                    console.log('Playback failed or was blocked');
+                });
+            } else if (!playing && !player.paused()) {
+                player.pause();
+            }
+        }
+    }, [playing]);
 
     // Cleanup
     useEffect(() => {
@@ -101,8 +137,20 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, onE
     }, []);
 
     return (
-        <div data-vjs-player style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
-            <div ref={videoRef} style={{ width: '100%', height: '100%' }} />
+        <div data-vjs-player style={{
+            width: '100vw',
+            height: '100vh',
+            overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'black'
+        }}>
+            <div ref={videoRef} style={{
+                width: 'min(100vw, 177.78vh)',
+                height: 'min(100vh, 56.25vw)',
+                position: 'relative'
+            }} />
         </div>
     );
 };
