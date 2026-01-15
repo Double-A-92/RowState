@@ -7,12 +7,13 @@ interface VideoPlayerProps {
     src: string;
     playbackRate: number;
     playing: boolean;
+    volume?: number;
     onPlay?: () => void;
     onPause?: () => void;
     onError?: (error: any) => void;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, playing, onPlay, onPause, onError }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, playing, volume = 1, onPlay, onPause, onError }) => {
     const videoRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<any | null>(null);
 
@@ -124,6 +125,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, pla
             }
         }
     }, [playing]);
+
+    // Volume control
+    useEffect(() => {
+        const player = playerRef.current;
+        if (player) {
+            player.volume(volume);
+        }
+    }, [volume]);
 
     // Cleanup
     useEffect(() => {

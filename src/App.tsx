@@ -3,6 +3,7 @@ import { useRowingMetrics } from './hooks/useRowingMetrics';
 import { useHeartRate } from './hooks/useHeartRate';
 import { VideoPlayer } from './components/VideoPlayer';
 import { useSmartPlaybackRate } from './hooks/useSmartPlaybackRate';
+import { useMetronome, type MetronomePhase } from './hooks/useMetronome';
 import { Overlay } from './components/Overlay';
 
 function App() {
@@ -11,11 +12,17 @@ function App() {
   // Default video
   const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=FljjSVANT9I');
   const [baselineSpm, setBaselineSpm] = useState(22);
+  const [metronomeEnabled, setMetronomeEnabled] = useState(false);
+  const [metronomePhase, setMetronomePhase] = useState<MetronomePhase>('recovery');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [videoVolume, setVideoVolume] = useState(1.0); // 0.0 to 1.0
   const prevStrokeRateRef = useRef<number>(0);
 
   // Smart playback rate
   const playbackRate = useSmartPlaybackRate(metrics.strokeRate, baselineSpm, status === 'connected');
+  // Metronome - only play if enabled AND video is playing
+  useMetronome(baselineSpm, metronomeEnabled && isVideoPlaying, setMetronomePhase);
+
   const [videoError, setVideoError] = useState<string | null>(null);
 
   const handleVideoError = (error: any) => {
@@ -39,6 +46,7 @@ function App() {
         src={videoUrl}
         playbackRate={playbackRate}
         playing={isVideoPlaying}
+        volume={videoVolume}
         onPlay={() => setIsVideoPlaying(true)}
         onPause={() => setIsVideoPlaying(false)}
         onError={handleVideoError}
@@ -68,6 +76,12 @@ function App() {
         currentUrl={videoUrl}
         baselineSpm={baselineSpm}
         onBaselineChange={setBaselineSpm}
+        metronomeEnabled={metronomeEnabled}
+        onMetronomeChange={setMetronomeEnabled}
+        metronomePhase={metronomePhase}
+        baselineBpm={baselineSpm}
+        videoVolume={videoVolume}
+        onVolumeChange={setVideoVolume}
       />
     </div>
   );

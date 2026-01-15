@@ -3,6 +3,7 @@ import type { ConnectionStatus } from '../hooks/useRowingMetrics';
 import type { HRConnectionStatus } from '../hooks/useHeartRate';
 import { type RowingData } from '../services/BluetoothService';
 import { type HeartRateData } from '../services/HeartRateService';
+import { MetronomeVisualizer, type MetronomePhase } from './MetronomeVisualizer';
 
 interface OverlayProps {
     connectionStatus: ConnectionStatus;
@@ -17,6 +18,12 @@ interface OverlayProps {
     currentUrl: string;
     baselineSpm: number;
     onBaselineChange: (spm: number) => void;
+    metronomeEnabled: boolean;
+    onMetronomeChange: (enabled: boolean) => void;
+    metronomePhase: MetronomePhase;
+    baselineBpm: number;
+    videoVolume: number;
+    onVolumeChange: (volume: number) => void;
 }
 
 export const Overlay: React.FC<OverlayProps> = ({
@@ -31,7 +38,13 @@ export const Overlay: React.FC<OverlayProps> = ({
     onUrlChange,
     currentUrl,
     baselineSpm,
-    onBaselineChange
+    onBaselineChange,
+    metronomeEnabled,
+    onMetronomeChange,
+    metronomePhase,
+    baselineBpm,
+    videoVolume,
+    onVolumeChange
 }) => {
     const [showInput, setShowInput] = useState(false);
     const [urlInput, setUrlInput] = useState(currentUrl);
@@ -65,6 +78,10 @@ export const Overlay: React.FC<OverlayProps> = ({
 
     return (
         <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-8 z-10 font-sans">
+            {/* Metronome Visualizer - Left Side */}
+            {metronomeEnabled && (
+                <MetronomeVisualizer phase={metronomePhase} bpm={baselineBpm} />
+            )}
             {/* Top Bar - Minimal */}
             <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-10 pointer-events-none">
                 <div className="pointer-events-auto flex gap-3">
@@ -219,6 +236,49 @@ export const Overlay: React.FC<OverlayProps> = ({
                                         onClick={() => onBaselineChange(Math.min(40, baselineSpm + 1))}
                                         className="h-8 w-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold"
                                     >+</button>
+                                </div>
+                            </div>
+
+                            <div className="w-full">
+                                <label className="text-[10px] uppercase text-gray-400 font-bold tracking-wider mb-2 block">
+                                    Metronome
+                                </label>
+                                <label className="flex items-center gap-3 cursor-pointer group w-fit">
+                                    <div className={`w-10 h-6 rounded-full border flex items-center transition-all px-1 ${metronomeEnabled ? 'bg-blue-600 border-blue-600' : 'bg-transparent border-white/20 group-hover:border-white/40'}`}>
+                                        <div className={`w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-all transform ${metronomeEnabled ? 'translate-x-4' : 'translate-x-0'}`} />
+                                    </div>
+                                    <span className="text-white text-sm font-bold opacity-80 group-hover:opacity-100 transition-opacity">
+                                        {metronomeEnabled ? 'On' : 'Off'}
+                                    </span>
+                                    <input
+                                        type="checkbox"
+                                        checked={metronomeEnabled}
+                                        onChange={(e) => onMetronomeChange(e.target.checked)}
+                                        className="hidden"
+                                    />
+                                </label>
+                            </div>
+
+                            <div className="w-full">
+                                <label className="text-[10px] uppercase text-gray-400 font-bold tracking-wider mb-2 block">
+                                    Volume
+                                </label>
+                                <div className="flex items-center gap-3">
+                                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 10H4a1 1 0 00-1 1v2a1 1 0 001 1h1.586l3.707 3.707A1 1 0 0011 17V7a1 1 0 00-1.707-.707L5.586 10z" />
+                                    </svg>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.05"
+                                        value={videoVolume}
+                                        onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
+                                        className="flex-1 h-2 bg-white/10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer"
+                                    />
+                                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 10H4a1 1 0 00-1 1v2a1 1 0 001 1h1.586l3.707 3.707A1 1 0 0011 17V7a1 1 0 00-1.707-.707L5.586 10z" />
+                                    </svg>
                                 </div>
                             </div>
 
