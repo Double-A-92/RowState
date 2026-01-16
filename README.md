@@ -2,6 +2,8 @@
 
 RowState is a web application that connects your rowing machine to YouTube videos, automatically adjusting playback speed to match your rowing pace. Row faster, the video speeds up. Row slower, it slows down.
 
+🚀 **[Try it now!](https://double-a-92.github.io/RowState/)**
+
 ## Features
 
 - **Smart Video Sync** - Video playback automatically adjusts to your stroke rate
@@ -9,6 +11,8 @@ RowState is a web application that connects your rowing machine to YouTube video
 - **Heart Rate Monitoring** - Optional Bluetooth heart rate sensor support
 - **Real-time Metrics** - Live display of stroke rate, split time, distance, power, and heart rate
 - **YouTube Integration** - Row along to any YouTube video
+- **Visual Metronome** - Animated vertical bar that moves with your rowing rhythm (drive/recovery phases)
+- **Video Volume Control** - Adjustable volume slider in the settings panel
 
 ## Getting Started
 
@@ -49,3 +53,7 @@ Bluetooth connections will not work in Firefox, Safari, or iOS browsers.
 ## License
 
 MIT
+
+---
+
+*Disclaimer: This app has been vibe coded.*
