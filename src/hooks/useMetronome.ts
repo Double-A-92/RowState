@@ -23,7 +23,7 @@ export const useMetronome = (bpm: number, isPlaying: boolean, onPhaseChange?: (p
         if (type === 'catch') {
             // Catch: Higher pitch, louder (Start of stroke)
             osc.frequency.value = 880;
-            gainNode.gain.setValueAtTime(0.3, time); // Louder
+            gainNode.gain.setValueAtTime(1, time); // Louder
             gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
             osc.start(time);
             osc.stop(time + 0.1);
@@ -38,7 +38,7 @@ export const useMetronome = (bpm: number, isPlaying: boolean, onPhaseChange?: (p
         } else {
             // Finish: Lower pitch, slightly softer (Recovery start)
             osc.frequency.value = 440;
-            gainNode.gain.setValueAtTime(0.15, time);
+            gainNode.gain.setValueAtTime(1, time);
             gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
             osc.start(time);
             osc.stop(time + 0.1);

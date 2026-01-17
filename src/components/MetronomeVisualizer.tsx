@@ -33,19 +33,20 @@ export const MetronomeVisualizer: React.FC<MetronomeVisualizerProps> = ({ phase,
                 {/* Bottom endpoint */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-2 h-2 bg-white/30 rounded-full" />
 
-                {/* Moving Ball - Blue to match app theme */}
+                {/* Moving Ball - Red for Drive/Catch, Blue for Recovery/Finish */}
                 <div
                     className="absolute left-1/2 w-6 h-6 rounded-full will-change-transform"
                     style={{
                         // Drive goes DOWN, Recovery goes UP
                         top: isDrive ? 'calc(100% - 36px)' : '16px',
                         transform: 'translateX(-50%)',
-                        transitionProperty: 'top',
+                        transitionProperty: 'all',
                         transitionDuration: `${duration}ms`,
                         transitionTimingFunction: timingFunction,
-                        background: 'radial-gradient(circle at 30% 30%, #60a5fa, #2563eb)',
-                        boxShadow: '0 0 20px rgba(37, 99, 235, 0.6), inset 0 1px 3px rgba(255,255,255,0.4)',
-                        border: '2px solid rgba(255,255,255,0.3)'
+                        background: isDrive
+                            ? 'radial-gradient(circle at 30% 30%, #C86466, #B63033)' // Red for catch/drive
+                            : 'radial-gradient(circle at 30% 30%, #9CD4F0, #71C1EA)', // Blue for finish/recovery
+                        border: '2px solid #9FA9A8'
                     }}
                 />
             </div>
