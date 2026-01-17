@@ -11,6 +11,7 @@ RowState is a web application that connects your rowing machine to YouTube video
 - **Heart Rate Monitoring** - Optional Bluetooth heart rate sensor support
 - **Real-time Metrics** - Live display of stroke rate, split time, distance, power, and heart rate
 - **YouTube Integration** - Row along to any YouTube video
+- **URL Parameters** - Share links with pre-configured videos and stroke rates
 - **Visual Metronome** - Animated vertical bar that moves with your rowing rhythm (drive/recovery phases)
 - **Video Volume Control** - Adjustable volume slider in the settings panel
 
@@ -49,6 +50,18 @@ Bluetooth connections will not work in Firefox, Safari, or iOS browsers.
 3. Load a YouTube video
 4. Set your baseline stroke rate (default: 22 SPM = 1.0x speed)
 5. Start rowing - the video speed adjusts automatically
+
+### URL Parameters
+
+You can share RowState links with pre-configured videos and stroke rates using URL parameters:
+
+```
+https://double-a-92.github.io/RowState/?v=VIDEO_ID&spm=STROKE_RATE
+```
+
+**Parameters:**
+- `v` - YouTube video ID (11 characters)
+- `spm` - Baseline strokes per minute (10-40, default: 22)
 
 ## License
 

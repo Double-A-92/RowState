@@ -6,12 +6,30 @@ import { useSmartPlaybackRate } from './hooks/useSmartPlaybackRate';
 import { useMetronome, type MetronomePhase } from './hooks/useMetronome';
 import { Overlay } from './components/Overlay';
 
+// Helper function to parse URL parameters
+const getUrlParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    videoId: params.get('v'),
+    spm: params.get('spm')
+  };
+};
+
 function App() {
   const { status, metrics, connect, disconnect } = useRowingMetrics();
   const { status: hrStatus, heartRateData, connect: hrConnect, disconnect: hrDisconnect } = useHeartRate();
-  // Default video
-  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=FljjSVANT9I');
-  const [baselineSpm, setBaselineSpm] = useState(22);
+  
+  // Parse URL parameters on initial load
+  const urlParams = getUrlParams();
+  const videoId = urlParams.videoId;
+  const spmParam = urlParams.spm;
+  
+  // Set initial video URL based on URL parameter or default
+  const initialVideoUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : 'https://www.youtube.com/watch?v=FljjSVANT9I';
+  const initialSpm = spmParam ? parseInt(spmParam, 10) : 22;
+  
+  const [videoUrl, setVideoUrl] = useState(initialVideoUrl);
+  const [baselineSpm, setBaselineSpm] = useState(initialSpm);
   const [metronomeEnabled, setMetronomeEnabled] = useState(false);
   const [metronomePhase, setMetronomePhase] = useState<MetronomePhase>('recovery');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
