@@ -48,7 +48,7 @@ Bluetooth connections will not work in Firefox, Safari, or iOS browsers.
 1. Connect your Bluetooth rowing machine
 2. Optionally connect a heart rate monitor
 3. Load a YouTube video
-4. Set your baseline stroke rate (default: 22 SPM = 1.0x speed)
+4. Set your baseline stroke rate (default: 20 SPM = 1.0x speed)
 5. Start rowing - the video speed adjusts automatically
 
 ### URL Parameters
@@ -61,7 +61,7 @@ https://double-a-92.github.io/RowState/?v=VIDEO_ID&spm=STROKE_RATE
 
 **Parameters:**
 - `v` - YouTube video ID (11 characters)
-- `spm` - Baseline strokes per minute (10-40, default: 22)
+- `spm` - Baseline strokes per minute (10-40, default: 20)
 
 ## License
 

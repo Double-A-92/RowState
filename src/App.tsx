@@ -40,7 +40,7 @@ function App() {
   
   // Set initial video URL based on URL parameter or default
   const initialVideoUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : 'https://www.youtube.com/watch?v=FljjSVANT9I';
-  const initialSpm = spmParam ? parseInt(spmParam, 10) : 22;
+  const initialSpm = spmParam ? parseInt(spmParam, 10) : 20;
   
   const [videoUrl, setVideoUrl] = useState(initialVideoUrl);
   const [currentVideoId, setCurrentVideoId] = useState(videoId || 'FljjSVANT9I');

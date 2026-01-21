@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-export const useSmartPlaybackRate = (currentSpm: number | undefined, baselineSpm: number = 22, isConnected: boolean = false) => {
+export const useSmartPlaybackRate = (currentSpm: number | undefined, baselineSpm: number = 20, isConnected: boolean = false) => {
     const [rate, setRate] = useState(1.0);
 
     // Refs to hold state for the animation loop
