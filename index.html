@@ -3,13 +3,15 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/rowstate-icon.svg" />
-  <link rel="apple-touch-icon" href="/icon-512.png" />
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/RowState/rowstate-icon.svg" />
+  <link rel="apple-touch-icon" href="/RowState/icon-512.png" />
+  <link rel="manifest" href="/RowState/manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#2563eb" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RowState" />
+  <meta name="application-name" content="RowState" />
   <title>RowState</title>
 </head>
 
@@ -19,7 +21,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('/RowState/sw.js')
           .then(reg => console.log('Service Worker registered'))
           .catch(err => console.log('Service Worker registration failed:', err));
       });
