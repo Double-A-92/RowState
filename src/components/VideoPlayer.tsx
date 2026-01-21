@@ -109,6 +109,13 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, playbackRate, pla
                     player.play()?.catch(() => console.log('Playback blocked'));
                 }
                 player.playbackRate(playbackRate);
+                
+                // Mute audio when speed is too slow to avoid distortion
+                if (playbackRate < 0.5) {
+                    player.muted(true);
+                } else {
+                    player.muted(false);
+                }
             }
         }
     }, [playbackRate, playing]);
