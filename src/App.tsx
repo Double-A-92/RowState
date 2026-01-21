@@ -50,6 +50,48 @@ function App() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoVolume, setVideoVolume] = useState(1.0); // 0.0 to 1.0
   const prevStrokeRateRef = useRef<number>(0);
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+
+  // Screen wake lock to prevent screen from dimming during rowing
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+        console.log('Screen wake lock active');
+      }
+    } catch (err) {
+      console.log('Wake lock failed:', err);
+    }
+  };
+
+  const releaseWakeLock = () => {
+    if (wakeLockRef.current) {
+      wakeLockRef.current.release();
+      wakeLockRef.current = null;
+      console.log('Screen wake lock released');
+    }
+  };
+
+  // Request wake lock when rowing starts
+  useEffect(() => {
+    const currentStrokeRate = metrics.strokeRate || 0;
+    const isRowing = currentStrokeRate > 0;
+
+    if (status === 'connected' && isRowing) {
+      requestWakeLock();
+    } else {
+      releaseWakeLock();
+    }
+
+    prevStrokeRateRef.current = currentStrokeRate;
+  }, [metrics.strokeRate, status]);
+
+  // Clean up wake lock on unmount
+  useEffect(() => {
+    return () => {
+      releaseWakeLock();
+    };
+  }, []);
 
   // Wrapper function to update video URL and sync with URL params
   const handleVideoUrlChange = (newUrl: string) => {
