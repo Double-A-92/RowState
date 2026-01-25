@@ -14,6 +14,7 @@ interface OverlayProps {
     heartRateData: HeartRateData | null;
     onHrConnect: () => void;
     onHrDisconnect: () => void;
+    heartRate?: number;
     onUrlChange: (url: string) => void;
     currentUrl: string;
     baselineSpm: number;
@@ -35,6 +36,7 @@ export const Overlay: React.FC<OverlayProps> = ({
     heartRateData,
     onHrConnect,
     onHrDisconnect,
+    heartRate,
     onUrlChange,
     currentUrl,
     baselineSpm,
@@ -126,8 +128,8 @@ export const Overlay: React.FC<OverlayProps> = ({
                         </div>
                     )}
 
-                    {/* Heart Rate Monitor Connection */}
-                    {(hrConnectionStatus === 'disconnected' || hrConnectionStatus === 'error') && (
+                    {/* Heart Rate Monitor Connection - Only show if no external sensor connected */}
+                    {hrConnectionStatus !== 'connected' && (hrConnectionStatus === 'disconnected' || hrConnectionStatus === 'error') && (
                         <button
                             onClick={onHrConnect}
                             className="group h-12 flex items-center gap-3 px-5 bg-neutral-900/90 hover:bg-neutral-800 text-white rounded-full border border-white/20 transition-all shadow-xl hover:shadow-red-500/20 active:scale-95 touch-manipulation"
@@ -330,7 +332,7 @@ export const Overlay: React.FC<OverlayProps> = ({
                     <div className="flex flex-col items-center">
                         <div className="flex items-center gap-2">
                             <span className="text-3xl md:text-6xl font-black font-mono text-white tracking-tighter drop-shadow-lg leading-none">
-                                {heartRateData?.heartRate ?? '--'}
+                                {heartRate ?? '--'}
                             </span>
                             {heartRateData && !heartRateData.contactDetected && (
                                 <span className="text-yellow-400 text-xs" title="Sensor not in contact">⚠</span>

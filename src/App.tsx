@@ -148,6 +148,9 @@ function App() {
     prevStrokeRateRef.current = currentStrokeRate;
   }, [metrics.strokeRate, status]);
 
+  // HR prioritization: External sensor > FTMS HR > None
+  const heartRate = heartRateData?.heartRate ?? metrics.heartRate;
+
   return (
     <div className="relative w-screen h-screen bg-black">
       <VideoPlayer
@@ -180,6 +183,7 @@ function App() {
         heartRateData={heartRateData}
         onHrConnect={hrConnect}
         onHrDisconnect={hrDisconnect}
+        heartRate={heartRate}
         onUrlChange={handleVideoUrlChange}
         currentUrl={videoUrl}
         baselineSpm={baselineSpm}

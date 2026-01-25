@@ -40,7 +40,7 @@ export const MetronomeVisualizer: React.FC<MetronomeVisualizerProps> = ({ phase,
                         // Drive goes DOWN, Recovery goes UP
                         top: isDrive ? 'calc(100% - 36px)' : '16px',
                         transform: 'translateX(-50%)',
-                        transitionProperty: 'all',
+                        transitionProperty: 'top',
                         transitionDuration: `${duration}ms`,
                         transitionTimingFunction: timingFunction,
                         background: isDrive

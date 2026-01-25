@@ -8,7 +8,7 @@ RowState is a web application that connects your rowing machine to YouTube video
 
 - **Smart Video Sync** - Video playback automatically adjusts to your stroke rate
 - **Bluetooth Rowing Monitor** - Connects to any FTMS-compatible rowing machine
-- **Heart Rate Monitoring** - Optional Bluetooth heart rate sensor support
+- **Heart Rate Monitoring** - Automatic HR from FTMS rowing machines, or connect an optional Bluetooth heart rate sensor
 - **Real-time Metrics** - Live display of stroke rate, split time, distance, power, and heart rate
 - **YouTube Integration** - Row along to any YouTube video
 - **URL Parameters** - Share links with pre-configured videos and stroke rates
