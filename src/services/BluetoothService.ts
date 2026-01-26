@@ -94,12 +94,6 @@ export class BluetoothService {
         const flags = value.getUint16(0, true);
         let byteIndex = 2;
 
-        // Log flags and raw bytes for every packet
-        const rawHex = Array.from(new Uint8Array(value.buffer, value.byteOffset, value.byteLength))
-            .map(b => b.toString(16).padStart(2, '0'))
-            .join(' ');
-        console.log(`[FTMS] Flags: 0x${flags.toString(16).padStart(4, '0')} | Raw: ${rawHex}`);
-
         // Bit 0: Stroke Rate and Stroke Count (present when bit is 0)
         if ((flags & (1 << 0)) === 0) {
             let rawRate = value.getUint8(byteIndex);
