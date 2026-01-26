@@ -94,6 +94,12 @@ export class BluetoothService {
         const flags = value.getUint16(0, true);
         let byteIndex = 2;
 
+        // Log flags and raw bytes for every packet
+        const rawHex = Array.from(new Uint8Array(value.buffer, value.byteOffset, value.byteLength))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join(' ');
+        console.log(`[FTMS] Flags: 0x${flags.toString(16).padStart(4, '0')} | Raw: ${rawHex}`);
+
         // Bit 0: Stroke Rate and Stroke Count (present when bit is 0)
         if ((flags & (1 << 0)) === 0) {
             let rawRate = value.getUint8(byteIndex);
@@ -146,8 +152,8 @@ export class BluetoothService {
 
         // Bit 7: Resistance Level
         if ((flags & (1 << 7)) !== 0) {
-            data.resistanceLevel = value.getUint8(byteIndex);
-            byteIndex += 1;
+            data.resistanceLevel = value.getUint16(byteIndex);
+            byteIndex += 2; // Spec implies uint8, but it's actually often uint16 for rowers
         }
 
         // Bit 8: Total Energy and Per Hour/Minute
