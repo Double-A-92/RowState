@@ -5,4 +5,14 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/RowState/', // GitHub Pages base path
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'videojs': ['video.js', 'videojs-youtube'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000, // Suppress warnings for video.js
+  },
 })
